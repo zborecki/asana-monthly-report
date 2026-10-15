@@ -1,8 +1,6 @@
 import { fromZonedTime } from 'date-fns-tz';
 
-import type { ICommandLineOptions } from '../types/cli';
-
-export function getMonthRange({ month, timezone }: Pick<ICommandLineOptions, 'month' | 'timezone'>) {
+export function getMonthPeriod(month: string, timezone: string) {
   const [year, monthNumber] = month.split('-').map(Number);
 
   if (

@@ -23,10 +23,13 @@
     "chalk": "^6.0.1",
     "commander": "^15.0.0",
     "date-fns-tz": "^3.2.0",
+    "exceljs": "^4.4.0",
     "ora": "^9.4.1"
   },
   "scripts": {
     "cli": "bun run index.ts",
-    "lint": "eslint ."
-  }
+    "lint": "eslint .",
+    "build": "bun build ./index.ts --compile --outfile dist/asana-monthly-report"
+  },
+  "author": "Norbert Zborecki"
 }

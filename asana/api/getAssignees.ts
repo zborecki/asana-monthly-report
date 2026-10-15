@@ -3,6 +3,8 @@ import ora from 'ora';
 
 import { createAsanaClient } from '../utils/createAsanaClient';
 
+import type { AsanaUser } from '../../types/asana';
+
 export async function getAssignees(accessToken: string, workspaceId: string) {
   const spinner = ora('Fetching users...').start();
 
@@ -10,7 +12,7 @@ export async function getAssignees(accessToken: string, workspaceId: string) {
     const client = createAsanaClient(accessToken);
     const api = new Asana.UsersApi(client);
 
-    const users = [];
+    const users: AsanaUser[] = [];
     let offset: string | undefined;
 
     do {

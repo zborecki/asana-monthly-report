@@ -4,7 +4,7 @@ export const getCommands = async () => select({
   message: 'Asana Monthly Report (CLI) — choose a command:',
   choices: [
     {
-      name: '1. Generate a report',
+      name: '1. Create a report',
       value: 'report'
     },
     {

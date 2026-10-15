@@ -1,44 +1,26 @@
 import Asana from 'asana';
 import ora from 'ora';
 
-import { getAsanaClient } from '../clients';
+import { createAsanaClient } from '../utils/createAsanaClient';
 
-import type { ICommandLineOptions } from '../../types/cli';
-import { getMonthRange } from '../../utils/get-month-range';
+import type { AsanaTask } from '../../types/asana';
+import { getMonthPeriod } from '../../utils/getMonthPeriod';
 
-interface AsanaUser {
-  gid: string;
-  name?: string;
+interface IGetCompletedTasks {
+  accessToken: string;
+  assigneeId: string;
+  month: string;
+  timezone: string;
+  workspaceId: string;
 }
 
-interface AsanaProject {
-  gid?: string;
-  name: string;
-}
-
-interface AsanaTask {
-  gid: string;
-  name: string;
-  created_at?: string;
-  completed?: boolean;
-  completed_at?: string | null;
-  completed_by?: AsanaUser | null;
-  assignee?: AsanaUser | null;
-  permalink_url?: string;
-  projects?: AsanaProject[];
-  resource_subtype?: string;
-}
-
-export async function getCompletedTasks(
-  options: ICommandLineOptions
-): Promise<AsanaTask[]> {
-  const client = getAsanaClient({ token: options.token });
+export async function getCompletedTasks({
+  accessToken, assigneeId, month, timezone, workspaceId
+}: IGetCompletedTasks): Promise<AsanaTask[]> {
+  const client = createAsanaClient(accessToken);
   const api = new Asana.TasksApi(client);
 
-  const { start, end } = getMonthRange({
-    month: options.month,
-    timezone: options.timezone
-  });
+  const period = getMonthPeriod(month, timezone);
 
   const tasks = new Map<string, AsanaTask>();
   const spinner = ora('Fetching completed tasks...').start();
@@ -48,9 +30,9 @@ export async function getCompletedTasks(
 
     do {
       const response = await api.getTasks({
-        workspace: options.workspace,
-        assignee: options.assignee,
-        completed_since: start.toISOString(),
+        workspace: workspaceId,
+        assignee: assigneeId,
+        completed_since: period.start.toISOString(),
         limit: 100,
         ...(offset ? { offset } : {}),
         opt_fields: [
@@ -72,10 +54,9 @@ export async function getCompletedTasks(
 
       for (const task of batch) {
         if (
-          task.completed === true &&
-          task.completed_at &&
-          new Date(task.completed_at) >= start &&
-          new Date(task.completed_at) < end &&
+          task.completed === true && task.completed_at &&
+          new Date(task.completed_at) >= period.start &&
+          new Date(task.completed_at) < period.end &&
           task.resource_subtype === 'default_task'
         ) {
           tasks.set(task.gid, task);
@@ -97,6 +78,7 @@ export async function getCompletedTasks(
   } catch (error) {
     spinner.fail('Failed to fetch tasks');
     console.error('Asana API error:', error);
+
     throw error;
   }
 }
