@@ -1,8 +1,9 @@
-import { formatInTimeZone, fromZonedTime } from "date-fns-tz";
-import type { ICommandLineOptions } from "../types/cli";
+import { fromZonedTime } from 'date-fns-tz';
+
+import type { ICommandLineOptions } from '../types/cli';
 
 export function getMonthRange({ month, timezone }: Pick<ICommandLineOptions, 'month' | 'timezone'>) {
-  const [year, monthNumber] = month.split("-").map(Number);
+  const [year, monthNumber] = month.split('-').map(Number);
 
   if (
     year === undefined ||
@@ -21,22 +22,12 @@ export function getMonthRange({ month, timezone }: Pick<ICommandLineOptions, 'mo
   const start = fromZonedTime(`${month}-01T00:00:00`, timezone);
 
   const nextMonthString =
-    `${nextYear}-${String(nextMonth).padStart(2, "0")}`;
+    `${nextYear}-${String(nextMonth).padStart(2, '0')}`;
 
   const end = fromZonedTime(
     `${nextMonthString}-01T00:00:00`,
-    timezone,
+    timezone
   );
 
   return { start, end };
-}
-
-export function formatDate(value: string | null, timezone: ICommandLineOptions['timezone']): string {
-  if (!value) return "";
-
-  return formatInTimeZone(
-    new Date(value),
-    timezone,
-    "yyyy-MM-dd",
-  );
 }

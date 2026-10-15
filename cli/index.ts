@@ -1,34 +1,26 @@
-import { select } from "@inquirer/prompts";
-import { reportCommand } from "./cmd/reportCommand";
+import { reportCommand } from './cmd/reportCommand';
+import { getCommands } from './utils/getCommands';
 
 async function cli() {
   while (true) {
     try {
-      const command = await select({
-        message: "Asana Monthly Report (CLI) — choose a command:",
-        choices: [
-          { name: "1. Generate a report", value: "report" },
-          { name: "2. Exit", value: "exit" },
-        ],
-      });
+      const command = await getCommands();
 
-      if (command === "exit") {
-        break;
-      }
+      if (command === 'exit') break;
 
       try {
         switch (command) {
-          case "report":
+          case 'report':
             await reportCommand();
             break;
         }
       } catch (error) {
-        console.error("\nCommand failed:", error instanceof Error ? error.message : error);
+        console.error('\nCommand failed:', error instanceof Error ? error.message : error);
       }
 
-      console.log("");
+      console.log('');
     } catch (error) {
-      if (error instanceof Error && (error.name === "ExitPromptError" || error.name === "AbortPromptError")) {
+      if (error instanceof Error && (error.name === 'ExitPromptError' || error.name === 'AbortPromptError')) {
         break;
       }
 

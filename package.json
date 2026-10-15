@@ -4,7 +4,14 @@
   "type": "module",
   "private": true,
   "devDependencies": {
-    "@types/bun": "latest"
+    "@eslint/js": "^10.0.1",
+    "@stylistic/eslint-plugin": "^5.10.0",
+    "@types/bun": "latest",
+    "eslint": "^9",
+    "eslint-plugin-import": "^2.32.0",
+    "globals": "^17.13.0",
+    "jiti": "^2.7.0",
+    "typescript-eslint": "^8.71.2"
   },
   "peerDependencies": {
     "typescript": "^5"
@@ -19,5 +26,6 @@
   },
   "scripts": {
     "cli": "bun run index.ts",
+    "lint": "eslint ."
   }
 }
