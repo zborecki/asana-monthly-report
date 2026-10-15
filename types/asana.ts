@@ -17,6 +17,9 @@ export type AsanaTask = {
   completed_by?: AsanaUser | null;
   assignee?: AsanaUser | null;
   permalink_url?: string;
+  parent?: null | {
+    projects: AsanaProject[];
+  }
   projects?: AsanaProject[];
   resource_subtype?: string;
 }

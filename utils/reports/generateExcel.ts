@@ -4,10 +4,11 @@ import ora from 'ora';
 import type { Rows } from '../../types/common';
 
 const columns = [
-  { header: 'Task', key: 'name', width: 45 },
-  { header: 'Completed At', key: 'completed_at', width: 25 },
-  { header: 'Assignee', key: 'assignee', width: 30 },
-  { header: 'URL', key: 'url', width: 60 }
+  { header: 'ID', key: 'id', width: 20 },
+  { header: 'Completed At', key: 'completed_at', width: 40 },
+  { header: 'Project', key: 'project', width: 60 },
+  { header: 'Title', key: 'title', width: 120 },
+  { header: 'URL', key: 'url', width: 300 }
 ];
 
 export async function generateXlsx(rows: Rows[], filePath: string): Promise<void> {

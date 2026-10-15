@@ -7,8 +7,16 @@ import ora from 'ora';
 import { generateCsv } from './generateCsv';
 import { generateXlsx } from './generateExcel';
 
+import { formatDate } from '../formatDate';
+
 import type { AsanaTask } from '../../types/asana';
 import type { Rows } from '../../types/common';
+
+const getProjectNames = (task: AsanaTask): string => {
+  const projects = task?.parent ? task.parent.projects : task?.projects ?? [];
+
+  return projects.map((project) => project.name).filter(Boolean).join(', ');
+};
 
 async function exportReport(
   tasks: AsanaTask[],
@@ -21,9 +29,10 @@ async function exportReport(
     await mkdir(reportsDir, { recursive: true });
 
     const rows: Rows[] = tasks.map((task) => ({
-      name: task.name,
-      completed_at: task.completed_at ?? '',
-      assignee: task.assignee?.name ?? '',
+      id: task.gid,
+      completed_at: task?.completed_at ? formatDate(task.completed_at) : '',
+      project: getProjectNames(task),
+      title: task.name,
       url: task.permalink_url ?? ''
     }));
 

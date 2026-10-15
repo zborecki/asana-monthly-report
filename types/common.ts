@@ -1,8 +1,9 @@
 export type ExportFormat = 'csv' | 'xlsx';
 
 export type Rows = {
-  name: string;
+  id: string;
   completed_at: string;
-  assignee: string;
+  project: string;
+  title: string;
   url: string;
 }

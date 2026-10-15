@@ -4,7 +4,7 @@ import ora from 'ora';
 
 import type { Rows } from '../../types/common';
 
-const headers = ['Task', 'Completed At', 'Assignee', 'URL'];
+const headers = ['ID', 'Completed At', 'Project', 'Title', 'URL'];
 
 function escapeCsv(value: unknown): string {
   return `"${String(value ?? '').replace(/"/g, '""')}"`;
@@ -17,7 +17,7 @@ export async function generateCsv(rows: Rows[], filePath: string): Promise<void>
     const csvContent = [
       headers.map(escapeCsv).join(','),
       ...rows.map((row) =>
-        [row.name, row.completed_at, row.assignee, row.url]
+        [row.id, row.completed_at, row.project, row.title, row.url]
           .map(escapeCsv)
           .join(',')
       )

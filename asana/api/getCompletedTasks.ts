@@ -46,7 +46,10 @@ export async function getCompletedTasks({
           'permalink_url',
           'projects.gid',
           'projects.name',
-          'resource_subtype'
+          'resource_subtype',
+          'parent.projects.gid',
+          'parent.projects.name',
+          'parent.name'
         ].join(',')
       });
 
