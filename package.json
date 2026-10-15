@@ -20,6 +20,7 @@
   "dependencies": {
     "@inquirer/prompts": "^8.7.3",
     "asana": "^3.3.0",
+    "chalk": "^6.0.1",
     "commander": "^15.0.0",
     "date-fns-tz": "^3.2.0",
     "ora": "^9.4.1"

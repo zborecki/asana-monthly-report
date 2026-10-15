@@ -1,10 +1,10 @@
+import Asana from 'asana';
+import ora from 'ora';
 
-import Asana from "asana";
-import ora from "ora";
+import { getAsanaClient } from '../clients';
 
-import type { ICommandLineOptions } from "../../types/cli";
-import { getAsanaClient } from "../clients";
-import { getMonthRange } from "../../utils/get-month-range";
+import type { ICommandLineOptions } from '../../types/cli';
+import { getMonthRange } from '../../utils/get-month-range';
 
 interface AsanaUser {
   gid: string;
@@ -30,18 +30,18 @@ interface AsanaTask {
 }
 
 export async function getCompletedTasks(
-  options: ICommandLineOptions,
+  options: ICommandLineOptions
 ): Promise<AsanaTask[]> {
   const client = getAsanaClient({ token: options.token });
   const api = new Asana.TasksApi(client);
 
   const { start, end } = getMonthRange({
     month: options.month,
-    timezone: options.timezone,
+    timezone: options.timezone
   });
 
   const tasks = new Map<string, AsanaTask>();
-  const spinner = ora("Fetching completed tasks...").start();
+  const spinner = ora('Fetching completed tasks...').start();
 
   try {
     let offset: string | undefined;
@@ -54,18 +54,18 @@ export async function getCompletedTasks(
         limit: 100,
         ...(offset ? { offset } : {}),
         opt_fields: [
-          "gid",
-          "name",
-          "created_at",
-          "completed",
-          "completed_at",
-          "assignee.gid",
-          "assignee.name",
-          "permalink_url",
-          "projects.gid",
-          "projects.name",
-          "resource_subtype",
-        ].join(","),
+          'gid',
+          'name',
+          'created_at',
+          'completed',
+          'completed_at',
+          'assignee.gid',
+          'assignee.name',
+          'permalink_url',
+          'projects.gid',
+          'projects.name',
+          'resource_subtype'
+        ].join(',')
       });
 
       const batch = (response.data ?? []) as AsanaTask[];
@@ -76,7 +76,7 @@ export async function getCompletedTasks(
           task.completed_at &&
           new Date(task.completed_at) >= start &&
           new Date(task.completed_at) < end &&
-          task.resource_subtype === "default_task"
+          task.resource_subtype === 'default_task'
         ) {
           tasks.set(task.gid, task);
         }
@@ -88,14 +88,15 @@ export async function getCompletedTasks(
     } while (offset);
 
     const result = [...tasks.values()].sort((a, b) =>
-      (a.completed_at ?? "").localeCompare(b.completed_at ?? ""),
+      (a.completed_at ?? '').localeCompare(b.completed_at ?? '')
     );
 
     spinner.succeed(`Fetched ${result.length} completed tasks`);
+
     return result;
   } catch (error) {
-    spinner.fail("Failed to fetch tasks");
-    console.error("Asana API error:", error);
+    spinner.fail('Failed to fetch tasks');
+    console.error('Asana API error:', error);
     throw error;
   }
 }

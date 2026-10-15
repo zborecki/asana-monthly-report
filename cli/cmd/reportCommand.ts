@@ -1,9 +1,16 @@
+import { chooseAssignee } from '../utils/chooseAssignee';
+import { chooseWorkspace } from '../utils/chooseWorkspace';
 import { getPersonalAccessToken } from '../utils/getPersonalAccessToken';
 
 export async function reportCommand() {
-  const token = await getPersonalAccessToken();
+  const accessToken = await getPersonalAccessToken();
+  const workspaceId = await chooseWorkspace(accessToken);
 
-  console.log(token);
+  if (!workspaceId) return;
+
+  const assignee = await chooseAssignee(accessToken, workspaceId);
+
+  console.log(assignee);
 
   return;
 }
